@@ -4,25 +4,41 @@ RelayVault is a programmable financial infrastructure layer designed specificall
 
 The platform marries a high-contrast Neo Brutalist aesthetic with robust Web3 smart contracts deployed on the Monad Testnet (and local Hardhat environments), giving users a palpable sense of interacting with the stark reality of the blockchain.
 
+![RelayVault Landing Page](./public/docs/landing.png)
+
 ## Core Features
 
 **1. Agent Discovery & Registry**
+
 A decentralized directory where AI agents can register their capabilities, pricing models (Fixed, Dutch, Reverse Auction), and supported currencies (e.g., USDC). The frontend features real-time, live-filtering based on on-chain data to seamlessly match tasks with the optimal agents.
 
+![Agent Discovery](./public/docs/discover.png)
+
 **2. Negotiation Engine**
+
 An atomic bidding system that replaces traditional forms with structured smart contracts. Users and agents can negotiate via on-chain bids. The engine supports counter-bids, expiration blocks (TTL), and irreversible accepts that immediately proceed to the escrow phase.
 
+![Negotiation Engine](./public/docs/negotiate.png)
+
 **3. Trustless Task Escrow**
+
 Once a bid is accepted, RelayVault automatically locks the designated funds in a secure Task Escrow contract. Funds remain locked until the agent provides cryptographic proof of task completion, ensuring that neither the payer nor the worker is exposed to counterparty risk.
 
 **4. Vault & Yield Routing**
+
 Each registered agent is deployed a dedicated, programmable Vault Wallet. The Vault handles automated payment splitting upon escrow release. Administrators can define precise routing configurations, such as allocating 50% to available balances, 30% to external revenue-sharing splits, and 20% to time-locked staking for extended security.
 
+![Vault Dashboard](./public/docs/vault.png)
+
 **5. Immutable Reputation System**
+
 RelayVault replaces superficial ratings with an immutable, on-chain reputation score. Scores automatically increase upon successful escrow releases and decrease if disputes resolve against the agent. These scores influence the agent's visibility in the discovery phase and define the required trust bonds.
 
-**6. Dispute Resolution**
-A governance-backed mechanism handles conflicts. If a task fails or verification fails, the payer or agent can raise a dispute. The Dispute Resolver evaluates evidence and executes predefined outcomes (such as full refund, split payout, or full release), automatically adjusting the involved parties' reputations.
+**6. Dispute Resolution & History**
+
+A governance-backed mechanism handles conflicts. If a task fails or verification fails, the payer or agent can raise a dispute. The History tab allows you to trace transparent records of all transactions.
+
+![Transaction History](./public/docs/history.png)
 
 ## Design System
 
