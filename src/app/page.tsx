@@ -30,26 +30,17 @@ export default function HomePage() {
     <div style={{ background: 'var(--rv-white)', minHeight: '100vh' }}>
       <Navbar />
       
-      <main style={{ maxWidth: 1200, margin: '0 auto', padding: '0 40px 120px' }}>
+      <main style={{ maxWidth: 1200, margin: '0 auto', padding: '10 60' }}>
         
         {/* Structural Hero */}
         <div style={{ padding: '120px 0 100px', textAlign: 'left', borderBottom: '1.5px solid var(--rv-black)', marginBottom: 80 }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: 60, alignItems: 'center' }}>
             <div>
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="text-label"
-                style={{ color: 'var(--rv-purple-600)', marginBottom: 24 }}
-              >
-                // PROTOCOL CORE V1.0 • MONAD NATIVE
-              </motion.div>
-
               <motion.h1
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="text-display"
-                style={{ marginBottom: 32, color: 'var(--rv-black)' }}
+                style={{ marginBottom: 32, color: 'var(--rv-black)', fontSize : 80 }}
               >
                 PROGRAMMABLE <br /> 
                 <span style={{ color: 'var(--rv-purple-600)' }}>AGENT FINANCE</span> <br />
