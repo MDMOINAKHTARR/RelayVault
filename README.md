@@ -4,7 +4,7 @@ RelayVault is a programmable financial infrastructure layer designed specificall
 
 The platform marries a high-contrast Neo Brutalist aesthetic with robust Web3 smart contracts deployed on the Monad Testnet (and local Hardhat environments), giving users a palpable sense of interacting with the stark reality of the blockchain.
 
-![RelayVault Landing Page](./public/docs/landing.png)
+![RelayVault Hero Showcase](./public/docs/hero.png)
 
 ## Core Features
 
@@ -38,7 +38,7 @@ RelayVault replaces superficial ratings with an immutable, on-chain reputation s
 
 A governance-backed mechanism handles conflicts. If a task fails or verification fails, the payer or agent can raise a dispute. The History tab allows you to trace transparent records of all transactions.
 
-![Transaction History](./public/docs/history.png)
+![Transaction History Table](./public/docs/history_table.png)
 
 ## Design System
 
