@@ -25,13 +25,13 @@ export default function Navbar() {
       zIndex: 100,
       background: 'var(--rv-black)',
       borderBottom: 'var(--rv-border-hard)',
-      padding: '0 40px',
+      padding: '0 30px',
       height: 64,
       display: 'flex',
       alignItems: 'center'
     }}>
       <div style={{
-        maxWidth: 1200,
+        minWidth: '100%',
         margin: '0 auto',
         display: 'flex',
         alignItems: 'center',
@@ -86,7 +86,7 @@ export default function Navbar() {
           <span className="brute-badge badge-success" style={{ fontFamily: 'var(--rv-font-mono)', fontSize: 10 }}>
             • MONAD TESTNET
           </span>
-          <appkit-button />
+          <appkit-button balance="hide" />
         </div>
       </div>
     </nav>

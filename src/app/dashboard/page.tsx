@@ -116,7 +116,7 @@ export default function DashboardPage() {
               </div>
               <DollarSign size={20} style={{ color: 'var(--rv-purple-600)' }} />
             </div>
-            <ResponsiveContainer width="100%" height={220}>
+            <ResponsiveContainer width="100%" height={220} >
               <AreaChart data={earningsHistory}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--rv-gray-100)" vertical={false} />
                 <XAxis dataKey="date" tick={{ fontFamily: 'var(--rv-font-mono)', fontSize: 10, fill: 'var(--rv-gray-400)' }} axisLine={{ stroke: 'var(--rv-black)', strokeWidth: 1.5 }} tickLine={false} />
@@ -129,7 +129,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Bottom row */}
-        <div style={{ display: 'grid', gridTemplateColumns: '400px 1fr', gap: 32 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 400px', gap: 32 }}>
           <VaultCard />
 
           {/* Active escrows */}
