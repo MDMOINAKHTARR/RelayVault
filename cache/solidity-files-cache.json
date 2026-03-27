@@ -1,0 +1,237 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "C:\\Users\\Moin\\Downloads\\RelayFlow\\relayvault\\contracts\\AgentRegistryAndVault.sol": {
+      "lastModificationDate": 1774592358835,
+      "contentHash": "74ce5deef1239e0a423a096491c25c39",
+      "sourceName": "contracts/AgentRegistryAndVault.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IRelayVault.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "AgentRegistry",
+        "VaultWallet"
+      ]
+    },
+    "C:\\Users\\Moin\\Downloads\\RelayFlow\\relayvault\\contracts\\IRelayVault.sol": {
+      "lastModificationDate": 1774592301443,
+      "contentHash": "534a8122628ea3d0eecb324916d28233",
+      "sourceName": "contracts/IRelayVault.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IAgentRegistry",
+        "INegotiationEngine",
+        "ITaskEscrow",
+        "IVaultWallet"
+      ]
+    },
+    "C:\\Users\\Moin\\Downloads\\RelayFlow\\relayvault\\contracts\\TaskEscrow.sol": {
+      "lastModificationDate": 1774593538476,
+      "contentHash": "57b1007d16e0c3ed2f470bcfca5392de",
+      "sourceName": "contracts/TaskEscrow.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IRelayVault.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IDisputeResolver",
+        "TaskEscrow"
+      ]
+    },
+    "C:\\Users\\Moin\\Downloads\\RelayFlow\\relayvault\\contracts\\ReputationBondManager.sol": {
+      "lastModificationDate": 1774592556512,
+      "contentHash": "dbe98832ad37c43ca31dcd2126aeee0a",
+      "sourceName": "contracts/ReputationBondManager.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IRelayVault.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "ReputationBondManager"
+      ]
+    },
+    "C:\\Users\\Moin\\Downloads\\RelayFlow\\relayvault\\contracts\\NegotiationEngine.sol": {
+      "lastModificationDate": 1774592391567,
+      "contentHash": "c71b0d3bfbee201a7d457bf678fd56a8",
+      "sourceName": "contracts/NegotiationEngine.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IRelayVault.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "NegotiationEngine"
+      ]
+    },
+    "C:\\Users\\Moin\\Downloads\\RelayFlow\\relayvault\\contracts\\DisputeResolver.sol": {
+      "lastModificationDate": 1774592493442,
+      "contentHash": "5d15c0a30b7f5438261bf80c46c50069",
+      "sourceName": "contracts/DisputeResolver.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IRelayVault.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "DisputeResolver",
+        "ITaskEscrowDispute"
+      ]
+    }
+  }
+}
