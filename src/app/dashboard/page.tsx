@@ -2,9 +2,10 @@
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import { VaultCard } from '@/components/VaultCard';
-import { MY_AGENT, ESCROWS } from '@/lib/mockData';
+import { useMyAgent } from '@/lib/useAgents';
+import { useAccount } from 'wagmi';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
-import { Shield, Zap, TrendingUp, Activity, DollarSign, Clock, ArrowUpRight } from 'lucide-react';
+import { Shield, Zap, TrendingUp, Activity, DollarSign, ArrowUpRight, AlertCircle, RefreshCw } from 'lucide-react';
 import { useToast } from '@/components/ToastProvider';
 
 const reputationHistory = [
@@ -14,9 +15,9 @@ const reputationHistory = [
 ];
 
 const earningsHistory = [
-  { date: 'JAN', amount: 4200 }, { date: 'FEB', amount: 7800 }, { date: 'MAR01', amount: 11200 },
-  { date: 'MAR08', amount: 16400 }, { date: 'MAR15', amount: 22100 }, { date: 'MAR22', amount: 35800 },
-  { date: 'TODAY', amount: 48200 },
+  { date: 'JAN', amount: 0 }, { date: 'FEB', amount: 0 }, { date: 'MAR01', amount: 0 },
+  { date: 'MAR08', amount: 0 }, { date: 'MAR15', amount: 0 }, { date: 'MAR22', amount: 0 },
+  { date: 'TODAY', amount: 0 },
 ];
 
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -33,12 +34,69 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 export default function DashboardPage() {
   const { showToast } = useToast();
+  const { address, isConnected } = useAccount();
+  const { agent, isLoading, isError, refetch } = useMyAgent(address);
+
+  // Not connected
+  if (!isConnected) {
+    return (
+      <div style={{ background: 'var(--rv-white)', minHeight: '100vh' }}>
+        <Navbar />
+        <main style={{ maxWidth: 1200, margin: '0 auto', padding: '80px 40px', textAlign: 'center' }}>
+          <AlertCircle size={48} style={{ margin: '0 auto 24px', color: 'var(--rv-coral-600)' }} />
+          <div className="text-h2" style={{ marginBottom: 12 }}>WALLET NOT CONNECTED</div>
+          <p style={{ color: 'var(--rv-gray-400)', fontFamily: 'var(--rv-font-mono)', fontSize: 14 }}>
+            Connect your wallet to view your agent dashboard.
+          </p>
+        </main>
+      </div>
+    );
+  }
+
+  // Loading
+  if (isLoading) {
+    return (
+      <div style={{ background: 'var(--rv-white)', minHeight: '100vh' }}>
+        <Navbar />
+        <main style={{ maxWidth: 1200, margin: '0 auto', padding: '80px 40px', textAlign: 'center' }}>
+          <div style={{ fontSize: 40, marginBottom: 24 }}>⛓</div>
+          <div className="text-h2" style={{ marginBottom: 12 }}>READING FROM CHAIN</div>
+          <p style={{ color: 'var(--rv-gray-400)', fontFamily: 'var(--rv-font-mono)', fontSize: 14 }}>
+            Querying your agent data on Monad Testnet...
+          </p>
+        </main>
+      </div>
+    );
+  }
+
+  // Not registered
+  if (!agent) {
+    return (
+      <div style={{ background: 'var(--rv-white)', minHeight: '100vh' }}>
+        <Navbar />
+        <main style={{ maxWidth: 1200, margin: '0 auto', padding: '80px 40px', textAlign: 'center' }}>
+          <Shield size={48} style={{ margin: '0 auto 24px', opacity: 0.3 }} />
+          <div className="text-h2" style={{ marginBottom: 12 }}>AGENT NOT REGISTERED</div>
+          <p style={{ color: 'var(--rv-gray-400)', fontFamily: 'var(--rv-font-mono)', fontSize: 14, marginBottom: 32 }}>
+            Your wallet <code style={{ fontSize: 12 }}>{address}</code> is not registered in the AgentRegistry.
+          </p>
+          <a href="/register" className="brute-btn brute-btn-purple" style={{ display: 'inline-flex' }}>
+            <Zap size={14} /> REGISTER NOW
+          </a>
+        </main>
+      </div>
+    );
+  }
+
+  const statusLabel = agent.status === 'active' ? 'ACTIVE' : agent.status === 'suspended' ? 'SUSPENDED' : 'INACTIVE';
   const kpis = [
-    { icon: TrendingUp, label: 'REPUTATION_SCORE', val: MY_AGENT.reputationScore, sub: '+14 ATTESTATIONS', color: 'var(--rv-teal-600)' },
-    { icon: DollarSign, label: 'TOTAL_EARNINGS', val: `$${MY_AGENT.totalEarnings.toLocaleString('en-US')}`, sub: 'USDC LIFETIME_VOL', color: 'var(--rv-purple-600)' },
-    { icon: Activity, label: 'TASKS_COMPLETED', val: MY_AGENT.totalTasksCompleted, sub: '3_ACTIVE_THREADS', color: 'var(--rv-yellow)' },
-    { icon: Shield, label: 'BOND_COLLATERAL', val: `$${MY_AGENT.bondCollateral.toLocaleString('en-US')}`, sub: `${MY_AGENT.disputeRate}% ERROR_RATE`, color: 'var(--rv-coral-600)' },
+    { icon: TrendingUp, label: 'REPUTATION_SCORE', val: agent.reputationScore, sub: 'ON-CHAIN SCORE /1000', color: 'var(--rv-teal-600)' },
+    { icon: DollarSign, label: 'TASKS_COMPLETED', val: agent.totalTasksCompleted, sub: 'VERIFIED ON-CHAIN', color: 'var(--rv-purple-600)' },
+    { icon: Activity, label: 'VAULT_ADDRESS', val: `${agent.vaultAddress.slice(0, 6)}...${agent.vaultAddress.slice(-4)}`, sub: 'PROGRAMMABLE VAULT', color: 'var(--rv-yellow)' },
+    { icon: Shield, label: 'STATUS', val: statusLabel, sub: `REGISTERED AT BLOCK`, color: 'var(--rv-coral-600)' },
   ];
+
+  const repData = [...reputationHistory.slice(0, -1), { date: 'NOW', score: agent.reputationScore }];
 
   return (
     <div style={{ background: 'var(--rv-white)', minHeight: '100vh' }}>
@@ -50,15 +108,16 @@ export default function DashboardPage() {
             <div className="text-label" style={{ color: 'var(--rv-purple-600)', marginBottom: 8 }}>// AGENT_OVERVIEW</div>
             <h1 className="text-h1" style={{ marginBottom: 12 }}>DASHBOARD</h1>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <span className="text-mono" style={{ fontSize: 12, color: 'var(--rv-gray-400)' }}>{MY_AGENT.agentId}</span>
-              <span className="brute-badge badge-success" style={{ fontSize: 10 }}>{MY_AGENT.status.toUpperCase()}</span>
+              <span className="text-mono" style={{ fontSize: 12, color: 'var(--rv-gray-400)' }}>{agent.agentId}</span>
+              <span className={`brute-badge ${statusLabel === 'ACTIVE' ? 'badge-success' : 'badge-error'}`} style={{ fontSize: 10 }}>{statusLabel}</span>
             </div>
           </div>
-          <button 
-            onClick={() => showToast('Connecting to performance metrics API...', 'info')}
-            className="brute-btn" style={{ padding: '0 20px', height: 44 }}
+          <button
+            onClick={() => { refetch(); showToast('Syncing from chain...', 'info'); }}
+            className="brute-btn"
+            style={{ display: 'flex', alignItems: 'center', gap: 8 }}
           >
-            REFRESH METRICS
+            <RefreshCw size={14} /> REFRESH METRICS
           </button>
         </div>
 
@@ -79,7 +138,7 @@ export default function DashboardPage() {
                   <Icon size={16} color="var(--rv-pure-white)" />
                 </div>
               </div>
-              <div style={{ fontFamily: 'var(--rv-font-mono)', fontSize: 28, fontWeight: 900, marginBottom: 6 }}>{val}</div>
+              <div style={{ fontFamily: 'var(--rv-font-mono)', fontSize: 24, fontWeight: 900, marginBottom: 6 }}>{val}</div>
               <div className="text-mono" style={{ fontSize: 11, color: 'var(--rv-gray-400)' }}>{sub}</div>
             </motion.div>
           ))}
@@ -87,79 +146,62 @@ export default function DashboardPage() {
 
         {/* Charts row */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32, marginBottom: 48 }}>
-          {/* Reputation chart */}
           <div className="brute-card" style={{ padding: 32 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
               <div>
                 <div className="text-h3" style={{ fontWeight: 800 }}>REPUTATION HISTORY</div>
-                <div className="text-mono" style={{ fontSize: 12, color: 'var(--rv-gray-400)', marginTop: 4 }}>90_DAY_ATTESTATION_FLOW</div>
+                <div className="text-mono" style={{ fontSize: 12, color: 'var(--rv-gray-400)', marginTop: 4 }}>LIVE ON-CHAIN SCORE</div>
               </div>
               <ArrowUpRight size={20} style={{ color: 'var(--rv-teal-600)' }} />
             </div>
             <ResponsiveContainer width="100%" height={220}>
-              <AreaChart data={reputationHistory}>
+              <AreaChart data={repData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--rv-gray-100)" vertical={false} />
                 <XAxis dataKey="date" tick={{ fontFamily: 'var(--rv-font-mono)', fontSize: 10, fill: 'var(--rv-gray-400)' }} axisLine={{ stroke: 'var(--rv-black)', strokeWidth: 1.5 }} tickLine={false} />
-                <YAxis domain={[800, 1000]} tick={{ fontFamily: 'var(--rv-font-mono)', fontSize: 10, fill: 'var(--rv-gray-400)' }} axisLine={{ stroke: 'var(--rv-black)', strokeWidth: 1.5 }} tickLine={false} />
+                <YAxis domain={[0, 1000]} tick={{ fontFamily: 'var(--rv-font-mono)', fontSize: 10, fill: 'var(--rv-gray-400)' }} axisLine={{ stroke: 'var(--rv-black)', strokeWidth: 1.5 }} tickLine={false} />
                 <Tooltip content={<CustomTooltip />} />
                 <Area type="stepAfter" dataKey="score" stroke="var(--rv-black)" strokeWidth={2.5} fill="var(--rv-teal-600)" fillOpacity={1} dot={false} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
 
-          {/* Earnings chart */}
+          {/* Capabilities */}
           <div className="brute-card" style={{ padding: 32 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
-              <div>
-                <div className="text-h3" style={{ fontWeight: 800 }}>EARNINGS VELOCITY</div>
-                <div className="text-mono" style={{ fontSize: 12, color: 'var(--rv-gray-400)', marginTop: 4 }}>CUMULATIVE_USDC_SETTLED</div>
-              </div>
-              <DollarSign size={20} style={{ color: 'var(--rv-purple-600)' }} />
+            <div className="text-h3" style={{ fontWeight: 800, marginBottom: 8 }}>CAPABILITIES</div>
+            <div className="text-mono" style={{ fontSize: 12, color: 'var(--rv-gray-400)', marginBottom: 24 }}>REGISTERED_ON_CHAIN</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+              {agent.capabilities.length > 0
+                ? agent.capabilities.map((cap, i) => (
+                    <span key={i} className="brute-badge" style={{ fontSize: 11, background: 'var(--rv-white)', borderColor: 'var(--rv-black)' }}>
+                      {cap.toUpperCase()}
+                    </span>
+                  ))
+                : <span style={{ color: 'var(--rv-gray-400)', fontSize: 13, fontFamily: 'var(--rv-font-mono)' }}>No capabilities set.</span>
+              }
             </div>
-            <ResponsiveContainer width="100%" height={220} >
-              <AreaChart data={earningsHistory}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--rv-gray-100)" vertical={false} />
-                <XAxis dataKey="date" tick={{ fontFamily: 'var(--rv-font-mono)', fontSize: 10, fill: 'var(--rv-gray-400)' }} axisLine={{ stroke: 'var(--rv-black)', strokeWidth: 1.5 }} tickLine={false} />
-                <YAxis tick={{ fontFamily: 'var(--rv-font-mono)', fontSize: 10, fill: 'var(--rv-gray-400)' }} axisLine={{ stroke: 'var(--rv-black)', strokeWidth: 1.5 }} tickLine={false} />
-                <Tooltip content={<CustomTooltip />} />
-                <Area type="stepAfter" dataKey="amount" stroke="var(--rv-black)" strokeWidth={2.5} fill="var(--rv-purple-600)" fillOpacity={1} dot={false} />
-              </AreaChart>
-            </ResponsiveContainer>
           </div>
         </div>
 
         {/* Bottom row */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 400px', gap: 32 }}>
           <VaultCard />
-
-          {/* Active escrows */}
           <div className="brute-card" style={{ padding: 32 }}>
-            <div className="text-h3" style={{ fontWeight: 800, marginBottom: 8 }}>ACTIVE ESCROWS</div>
-            <div className="text-mono" style={{ fontSize: 12, color: 'var(--rv-gray-400)', marginBottom: 24 }}>STAKED_FUNDS_IN_SETTLEMENT</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                {ESCROWS.map((e) => {
-                  const stateClass: Record<string, string> = { LOCKED: 'badge-primary', COMPLETED: 'badge-success', RELEASED: 'badge-success', DISPUTED: 'badge-error' };
-                  return (
-                    <div key={e.escrowId} className="brute-card" style={{ padding: '16px 20px', borderStyle: 'solid', display: 'flex', justifyContent: 'space-between', alignItems: 'center', filter: e.state === 'RELEASED' ? 'grayscale(1)' : 'none' }}>
-                      <div>
-                        <div className="text-mono" style={{ fontSize: 12, fontWeight: 900, marginBottom: 4 }}>{e.escrowId.toUpperCase()}</div>
-                        <div className="text-label" style={{ fontSize: 10, color: 'var(--rv-gray-500)' }}>{e.payerName} → {e.receiverName}</div>
-                      </div>
-                      <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontFamily: 'var(--rv-font-mono)', fontSize: 18, fontWeight: 900, marginBottom: 6 }}>${e.amount.toLocaleString('en-US')}</div>
-                        <span className={`brute-badge ${stateClass[e.state] || ''}`} style={{ fontSize: 9 }}>{e.state}</span>
-                      </div>
-                    </div>
-                  );
-                })}
+            <div className="text-h3" style={{ fontWeight: 800, marginBottom: 8 }}>AGENT DETAILS</div>
+            <div className="text-mono" style={{ fontSize: 12, color: 'var(--rv-gray-400)', marginBottom: 24 }}>ON_CHAIN_REGISTRY_DATA</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {[
+                { label: 'Agent ID', value: `${agent.agentId.slice(0, 10)}...${agent.agentId.slice(-8)}` },
+                { label: 'Vault Address', value: `${agent.vaultAddress.slice(0, 10)}...${agent.vaultAddress.slice(-8)}` },
+                { label: 'Registered At', value: new Date(agent.registeredAt * 1000).toLocaleDateString() },
+                { label: 'Pricing Type', value: ['FIXED', 'DUTCH', 'REVERSE AUCTION'][agent.pricingModel.pricingType] ?? 'FIXED' },
+                { label: 'Base Price', value: agent.pricingModel.basePrice > 0 ? `${agent.pricingModel.basePrice} USDC` : '—' },
+              ].map(({ label, value }) => (
+                <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid var(--rv-gray-100)' }}>
+                  <span className="text-label" style={{ fontSize: 11 }}>{label}</span>
+                  <span style={{ fontFamily: 'var(--rv-font-mono)', fontSize: 11, fontWeight: 700 }}>{value}</span>
+                </div>
+              ))}
             </div>
-            <button 
-                onClick={() => showToast('Opening comprehensive escrow registry...', 'info')}
-                className="brute-btn" 
-                style={{ width: '100%', marginTop: 24, background: 'var(--rv-black)', color: 'var(--rv-white)' }}
-            >
-                VIEW_ALL_SETTLEMENTS
-            </button>
           </div>
         </div>
       </main>

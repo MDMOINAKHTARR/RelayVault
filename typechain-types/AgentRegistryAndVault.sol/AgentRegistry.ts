@@ -71,12 +71,14 @@ export declare namespace IAgentRegistry {
 export interface AgentRegistryInterface extends Interface {
   getFunction(
     nameOrSignature:
+      | "agentAddresses"
       | "agentCount"
       | "agentVaults"
       | "agents"
       | "deregister"
       | "disputeResolver"
       | "getAgent"
+      | "getAllAgents"
       | "getVaultAddress"
       | "owner"
       | "register"
@@ -99,6 +101,10 @@ export interface AgentRegistryInterface extends Interface {
   ): EventFragment;
 
   encodeFunctionData(
+    functionFragment: "agentAddresses",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "agentCount",
     values?: undefined
   ): string;
@@ -118,6 +124,10 @@ export interface AgentRegistryInterface extends Interface {
   encodeFunctionData(
     functionFragment: "getAgent",
     values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getAllAgents",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "getVaultAddress",
@@ -157,6 +167,10 @@ export interface AgentRegistryInterface extends Interface {
     values: [AddressLike]
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "agentAddresses",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "agentCount", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "agentVaults",
@@ -169,6 +183,10 @@ export interface AgentRegistryInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getAgent", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getAllAgents",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "getVaultAddress",
     data: BytesLike
@@ -327,6 +345,8 @@ export interface AgentRegistry extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
+  agentAddresses: TypedContractMethod<[arg0: BigNumberish], [string], "view">;
+
   agentCount: TypedContractMethod<[], [bigint], "view">;
 
   agentVaults: TypedContractMethod<[arg0: AddressLike], [string], "view">;
@@ -362,6 +382,12 @@ export interface AgentRegistry extends BaseContract {
   getAgent: TypedContractMethod<
     [agentId: AddressLike],
     [IAgentRegistry.AgentInfoStructOutput],
+    "view"
+  >;
+
+  getAllAgents: TypedContractMethod<
+    [],
+    [IAgentRegistry.AgentInfoStructOutput[]],
     "view"
   >;
 
@@ -422,6 +448,9 @@ export interface AgentRegistry extends BaseContract {
   ): T;
 
   getFunction(
+    nameOrSignature: "agentAddresses"
+  ): TypedContractMethod<[arg0: BigNumberish], [string], "view">;
+  getFunction(
     nameOrSignature: "agentCount"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
@@ -465,6 +494,9 @@ export interface AgentRegistry extends BaseContract {
     [IAgentRegistry.AgentInfoStructOutput],
     "view"
   >;
+  getFunction(
+    nameOrSignature: "getAllAgents"
+  ): TypedContractMethod<[], [IAgentRegistry.AgentInfoStructOutput[]], "view">;
   getFunction(
     nameOrSignature: "getVaultAddress"
   ): TypedContractMethod<[agentId: AddressLike], [string], "view">;

@@ -102,4 +102,12 @@ contract NegotiationEngine is INegotiationEngine {
     function getBid(bytes32 bidId) external view override returns (Bid memory) {
         return bids[bidId];
     }
+
+    function getAgentBids(address agent) external view returns (bytes32[] memory) {
+        return agentBids[agent];
+    }
+
+    function getAllBidIds() external view returns (bytes32[] memory) {
+        return allBidIds;
+    }
 }

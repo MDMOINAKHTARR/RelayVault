@@ -3,28 +3,23 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import { AgentCard } from '@/components/AgentCard';
-import { AGENTS, type Agent } from '@/lib/mockData';
-import { Search, SlidersHorizontal, X, Filter } from 'lucide-react';
+import { useAgents } from '@/lib/useAgents';
+import { Search, X, Filter, RefreshCw, AlertCircle } from 'lucide-react';
 import { useToast } from '@/components/ToastProvider';
-
-const ALL_CAPABILITIES = Array.from(new Set(AGENTS.flatMap(a => a.capabilities)));
-const DOMAINS = Array.from(new Set(ALL_CAPABILITIES.map(c => c.split(':')[0])));
 
 export default function DiscoverPage() {
   const [search, setSearch] = useState('');
   const [minRep, setMinRep] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(500);
-  const [domain, setDomain] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<'reputation' | 'price' | 'tasks'>('reputation');
   const { showToast } = useToast();
+  const { agents, isLoading, isError, refetch } = useAgents();
 
-  const filtered = AGENTS
+  const filtered = agents
     .filter(a => {
-      if (search && !a.name.toLowerCase().includes(search.toLowerCase()) &&
+      if (search &&
+          !a.agentId.toLowerCase().includes(search.toLowerCase()) &&
           !a.capabilities.some(c => c.toLowerCase().includes(search.toLowerCase()))) return false;
       if (a.reputationScore < minRep) return false;
-      if (a.pricingModel.basePrice > maxPrice) return false;
-      if (domain && !a.capabilities.some(c => c.startsWith(domain))) return false;
       return true;
     })
     .sort((a, b) => {
@@ -38,20 +33,27 @@ export default function DiscoverPage() {
       <Navbar />
       <main style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 40px 120px' }}>
 
-        <div style={{ marginBottom: 48, borderBottom: '1.5px solid var(--rv-black)', paddingBottom: 24 }}>
-          <div className="text-label" style={{ color: 'var(--rv-purple-600)', marginBottom: 8 }}>// AGENT MARKETPLACE</div>
-          <h1 className="text-h1" style={{ marginBottom: 12 }}>
-            DISCOVER AGENTS
-          </h1>
-          <p style={{ fontSize: 15, color: 'var(--rv-gray-600)', fontFamily: 'var(--rv-font-mono)' }}>
-            {AGENTS.length} REGISTERED ENTITIES · VERIFIED ON-CHAIN
-          </p>
+        <div style={{ marginBottom: 48, borderBottom: '1.5px solid var(--rv-black)', paddingBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+          <div>
+            <div className="text-label" style={{ color: 'var(--rv-purple-600)', marginBottom: 8 }}>// AGENT MARKETPLACE</div>
+            <h1 className="text-h1" style={{ marginBottom: 12 }}>DISCOVER AGENTS</h1>
+            <p style={{ fontSize: 15, color: 'var(--rv-gray-600)', fontFamily: 'var(--rv-font-mono)' }}>
+              {isLoading ? 'LOADING FROM CHAIN...' : `${agents.length} REGISTERED ENTITIES · VERIFIED ON-CHAIN`}
+            </p>
+          </div>
+          <button
+            onClick={() => { refetch(); showToast('Syncing from on-chain registry...', 'info'); }}
+            className="brute-btn"
+            style={{ display: 'flex', alignItems: 'center', gap: 8 }}
+          >
+            <RefreshCw size={14} /> REFRESH
+          </button>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: 40, alignItems: 'start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: 40, alignItems: 'start' }}>
           {/* Sidebar filters */}
           <div style={{ position: 'sticky', top: 104 }}>
-            <div className="brute-card" style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 32 }}>
+            <div className="brute-card" style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 28 }}>
 
               <div>
                 <div className="text-label" style={{ marginBottom: 12 }}>Search Registry</div>
@@ -60,35 +62,10 @@ export default function DiscoverPage() {
                   <input
                     className="brute-input"
                     style={{ paddingLeft: 44, height: 44, width: '100%' }}
-                    placeholder="NAME OR CAPABILITY..."
+                    placeholder="ADDRESS OR CAPABILITY..."
                     value={search}
                     onChange={e => setSearch(e.target.value)}
                   />
-                </div>
-              </div>
-
-              <div>
-                <div className="text-label" style={{ marginBottom: 12 }}>Capabilities</div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                  {DOMAINS.map(d => (
-                    <button
-                      key={d}
-                      onClick={() => {
-                        setDomain(domain === d ? null : d);
-                        showToast(`Filtering by ${d.toUpperCase()} domain`, 'info');
-                      }}
-                      className="brute-badge"
-                      style={{ 
-                        cursor: 'pointer', 
-                        textTransform: 'uppercase', 
-                        background: domain === d ? 'var(--rv-black)' : 'var(--rv-white)', 
-                        color: domain === d ? 'var(--rv-white)' : 'var(--rv-black)',
-                        borderColor: 'var(--rv-black)'
-                      }}
-                    >
-                      {d}
-                    </button>
-                  ))}
                 </div>
               </div>
 
@@ -105,18 +82,6 @@ export default function DiscoverPage() {
               </div>
 
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
-                  <div className="text-label">Max Price (USDC)</div>
-                  <span style={{ fontFamily: 'var(--rv-font-mono)', fontSize: 12, fontWeight: 700 }}>${maxPrice}</span>
-                </div>
-                <input
-                  type="range" min={1} max={500} value={maxPrice}
-                  onChange={e => setMaxPrice(+e.target.value)}
-                  style={{ width: '100%', accentColor: 'var(--rv-black)' }}
-                />
-              </div>
-
-              <div>
                 <div className="text-label" style={{ marginBottom: 12 }}>Sort Order</div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {[['reputation', 'REPUTATION HIGHEST'], ['price', 'PRICE LOWEST'], ['tasks', 'VOLUME HIGHEST']].map(([val, lbl]) => (
@@ -128,14 +93,11 @@ export default function DiscoverPage() {
                 </div>
               </div>
 
-              {(search || domain || minRep > 0 || maxPrice < 500) && (
-                <button 
-                  className="brute-btn" 
+              {(search || minRep > 0) && (
+                <button
+                  className="brute-btn"
                   style={{ borderColor: 'var(--rv-coral-600)', color: 'var(--rv-coral-600)', width: '100%' }}
-                  onClick={() => { 
-                    setSearch(''); setDomain(null); setMinRep(0); setMaxPrice(500); 
-                    showToast('Search filters cleared.', 'info');
-                  }}
+                  onClick={() => { setSearch(''); setMinRep(0); showToast('Filters cleared.', 'info'); }}
                 >
                   <X size={14} /> CLEAR FILTERS
                 </button>
@@ -147,24 +109,55 @@ export default function DiscoverPage() {
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
               <span className="text-mono" style={{ fontSize: 13, color: 'var(--rv-gray-400)' }}>
-                {filtered.length} AGENTS MATCHING PROTOCOL FILTERS
+                {isLoading ? 'FETCHING ON-CHAIN DATA...' : `${filtered.length} AGENTS MATCHING FILTERS`}
               </span>
             </div>
 
-            {filtered.length === 0 ? (
+            {/* Loading state */}
+            {isLoading && (
+              <div className="brute-card" style={{ padding: 80, textAlign: 'center', borderStyle: 'dotted' }}>
+                <div style={{ fontSize: 32, marginBottom: 16 }}>⛓</div>
+                <div className="text-h3" style={{ marginBottom: 8 }}>READING FROM CHAIN</div>
+                <p style={{ fontSize: 14, color: 'var(--rv-gray-400)', fontFamily: 'var(--rv-font-mono)' }}>
+                  Querying AgentRegistry on Monad Testnet...
+                </p>
+              </div>
+            )}
+
+            {/* Error state */}
+            {isError && !isLoading && (
+              <div className="brute-card" style={{ padding: 48, textAlign: 'center', borderColor: 'var(--rv-coral-600)' }}>
+                <AlertCircle size={40} style={{ margin: '0 auto 16px', color: 'var(--rv-coral-600)' }} />
+                <div className="text-h3" style={{ marginBottom: 8 }}>CHAIN READ FAILED</div>
+                <p style={{ fontSize: 14, color: 'var(--rv-gray-400)', marginBottom: 20 }}>
+                  Could not read from the registry. Make sure MetaMask is on Monad Testnet.
+                </p>
+                <button onClick={() => refetch()} className="brute-btn brute-btn-purple">RETRY</button>
+              </div>
+            )}
+
+            {/* Empty state */}
+            {!isLoading && !isError && filtered.length === 0 && (
               <div className="brute-card" style={{ padding: 80, textAlign: 'center', color: 'var(--rv-gray-400)', borderStyle: 'dotted' }}>
                 <Filter size={48} style={{ margin: '0 auto 24px', opacity: 0.2 }} />
-                <div className="text-h3" style={{ marginBottom: 8 }}>NO AGENTS FOUND</div>
-                <p style={{ fontSize: 14 }}>Try adjusting your filters to see more agents.</p>
-                <button 
-                  onClick={() => { setSearch(''); setDomain(null); setMinRep(0); setMaxPrice(500); }} 
-                  className="brute-btn brute-btn-purple" 
-                  style={{ marginTop: 24 }}
-                >
-                  RESET FILTERS
-                </button>
+                <div className="text-h3" style={{ marginBottom: 8 }}>
+                  {agents.length === 0 ? 'NO AGENTS REGISTERED' : 'NO AGENTS FOUND'}
+                </div>
+                <p style={{ fontSize: 14 }}>
+                  {agents.length === 0
+                    ? 'Be the first! Register your agent on the Register page.'
+                    : 'Try adjusting your filters to see more agents.'}
+                </p>
+                {agents.length === 0 && (
+                  <a href="/register" className="brute-btn brute-btn-purple" style={{ display: 'inline-flex', marginTop: 24 }}>
+                    REGISTER AGENT
+                  </a>
+                )}
               </div>
-            ) : (
+            )}
+
+            {/* Agent grid */}
+            {!isLoading && !isError && filtered.length > 0 && (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }}>
                 {filtered.map((agent, i) => (
                   <motion.div

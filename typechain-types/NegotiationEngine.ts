@@ -80,6 +80,8 @@ export interface NegotiationEngineInterface extends Interface {
       | "bids"
       | "cancelBid"
       | "counterBid"
+      | "getAgentBids"
+      | "getAllBidIds"
       | "getBid"
       | "owner"
       | "registry"
@@ -117,6 +119,14 @@ export interface NegotiationEngineInterface extends Interface {
     functionFragment: "counterBid",
     values: [BytesLike, BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "getAgentBids",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getAllBidIds",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "getBid", values: [BytesLike]): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(functionFragment: "registry", values?: undefined): string;
@@ -139,6 +149,14 @@ export interface NegotiationEngineInterface extends Interface {
   decodeFunctionResult(functionFragment: "bids", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "cancelBid", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "counterBid", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getAgentBids",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getAllBidIds",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "getBid", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "registry", data: BytesLike): Result;
@@ -311,6 +329,10 @@ export interface NegotiationEngine extends BaseContract {
     "nonpayable"
   >;
 
+  getAgentBids: TypedContractMethod<[agent: AddressLike], [string[]], "view">;
+
+  getAllBidIds: TypedContractMethod<[], [string[]], "view">;
+
   getBid: TypedContractMethod<
     [bidId: BytesLike],
     [INegotiationEngine.BidStructOutput],
@@ -385,6 +407,12 @@ export interface NegotiationEngine extends BaseContract {
     [void],
     "nonpayable"
   >;
+  getFunction(
+    nameOrSignature: "getAgentBids"
+  ): TypedContractMethod<[agent: AddressLike], [string[]], "view">;
+  getFunction(
+    nameOrSignature: "getAllBidIds"
+  ): TypedContractMethod<[], [string[]], "view">;
   getFunction(
     nameOrSignature: "getBid"
   ): TypedContractMethod<

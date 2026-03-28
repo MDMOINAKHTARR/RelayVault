@@ -38,6 +38,37 @@ export const REGISTRY_ABI = [
       }
     ],
     "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getAllAgents",
+    "inputs": [],
+    "outputs": [
+      { "name": "", "type": "tuple[]", "components": [
+          { "name": "agentId", "type": "address" },
+          { "name": "capabilities", "type": "bytes32[]" },
+          { "name": "pricingModel", "type": "tuple", "components": [
+              { "name": "basePrice", "type": "uint256" },
+              { "name": "currency", "type": "address" },
+              { "name": "pricingType", "type": "uint8" }
+            ]
+          },
+          { "name": "reputationScore", "type": "uint256" },
+          { "name": "vaultAddress", "type": "address" },
+          { "name": "status", "type": "uint8" },
+          { "name": "registeredAt", "type": "uint256" },
+          { "name": "totalTasksCompleted", "type": "uint256" }
+        ]
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "agentCount",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "uint256" }],
+    "stateMutability": "view"
   }
 ] as const;
 
@@ -60,6 +91,55 @@ export const NEGOTIATION_ABI = [
     "inputs": [{ "name": "bidId", "type": "bytes32" }],
     "outputs": [],
     "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "counterBid",
+    "inputs": [
+      { "name": "bidId", "type": "bytes32" },
+      { "name": "newPrice", "type": "uint256" }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "cancelBid",
+    "inputs": [{ "name": "bidId", "type": "bytes32" }],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "getBid",
+    "inputs": [{ "name": "bidId", "type": "bytes32" }],
+    "outputs": [
+      { "name": "", "type": "tuple", "components": [
+          { "name": "bidId", "type": "bytes32" },
+          { "name": "taskSpecCID", "type": "string" },
+          { "name": "initiator", "type": "address" },
+          { "name": "targetAgent", "type": "address" },
+          { "name": "price", "type": "uint256" },
+          { "name": "ttlBlocks", "type": "uint256" },
+          { "name": "state", "type": "uint8" },
+          { "name": "counterHistory", "type": "tuple[]", "components": [
+              { "name": "price", "type": "uint256" },
+              { "name": "by", "type": "address" },
+              { "name": "at", "type": "uint256" }
+            ]
+          },
+          { "name": "createdAt", "type": "uint256" }
+        ]
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getAgentBids",
+    "inputs": [{ "name": "agent", "type": "address" }],
+    "outputs": [{ "name": "", "type": "bytes32[]" }],
+    "stateMutability": "view"
   }
 ] as const;
 
