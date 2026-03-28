@@ -1,18 +1,54 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
-import { Plus, Trash2, ChevronDown, CheckCircle, Zap, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Plus, Trash2, ChevronDown, CheckCircle, Zap, ArrowRight, ArrowLeft, Loader2 } from 'lucide-react';
 import { useToast } from '@/components/ToastProvider';
+import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract } from 'wagmi';
+import { stringToHex, pad, parseEther } from 'viem';
+import { REGISTRY_ABI, CONTRACT_ADDRESSES } from '@/lib/contracts';
 
 const CAPABILITY_DOMAINS = ['code', 'data', 'finance', 'legal', 'media', 'language', 'ai', 'governance', 'compliance'];
 
 export default function RegisterPage() {
+  const { address: userAddress, isConnected } = useAccount();
+  const { showToast } = useToast();
+
+  // Form State
+  const [agentName, setAgentName] = useState('ALPHA_GEN_V1');
+  const [description, setDescription] = useState('');
+  const [ownerAddr, setOwnerAddr] = useState('');
   const [capabilities, setCapabilities] = useState<string[]>(['code:generation:solidity']);
+  const [pricingType, setPricingType] = useState('FIXED');
+  const [basePrice, setBasePrice] = useState('50');
+  
   const [newCap, setNewCap] = useState('');
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
-  const { showToast } = useToast();
+
+  // Wagmi Hooks
+  const { data: hash, writeContract, isPending: isWritePending, error: writeError } = useWriteContract();
+  
+  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({
+    hash,
+  });
+
+  // Effect to handle transaction completion
+  useEffect(() => {
+    if (isConfirmed) {
+      setSubmitted(true);
+      showToast('Vault Wallet deployed successfully!', 'success');
+    }
+    if (writeError) {
+      showToast(writeError.message || 'Registration failed', 'error');
+    }
+  }, [isConfirmed, writeError, showToast]);
+
+  useEffect(() => {
+    if (userAddress) {
+        setOwnerAddr(userAddress);
+    }
+  }, [userAddress]);
 
   const addCap = () => {
     if (newCap && !capabilities.includes(newCap) && capabilities.length < 32) {
@@ -38,7 +74,7 @@ export default function RegisterPage() {
             <div style={{ fontSize: 64, marginBottom: 32 }}>⚡</div>
             <h1 className="text-h1" style={{ marginBottom: 16 }}>VAULT_DEPLOYED</h1>
             <p className="text-mono" style={{ color: 'var(--rv-gray-600)', marginBottom: 40, fontSize: 14 }}>
-              AGENT_IDENTIFIER: 0xVAULT_7A3F...<br/>
+              TRANSACTION_HASH: <span style={{ color: 'var(--rv-black)', fontWeight: 800 }}>{hash?.slice(0, 10)}...{hash?.slice(-8)}</span><br/>
               STATUS: REGISTERED_ON_CHAIN_MONAD
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, justifyContent: 'center' }}>
@@ -111,15 +147,15 @@ export default function RegisterPage() {
               <div className="text-h3" style={{ fontWeight: 800 }}>IDENTITY_CONFIGURATION</div>
               <div>
                 <label className="text-label" style={{ marginBottom: 10, display: 'block' }}>AGENT_NAME</label>
-                <input className="brute-input" placeholder="NAME_OF_ENTITY..." defaultValue="ALPHA_GEN_V1" />
+                <input className="brute-input" placeholder="NAME_OF_ENTITY..." value={agentName} onChange={e => setAgentName(e.target.value)} />
               </div>
               <div>
                 <label className="text-label" style={{ marginBottom: 10, display: 'block' }}>DESCRIPTION</label>
-                <textarea className="brute-input" rows={4} placeholder="SPECIFY_SPECIALIZATION_DATA..." style={{ resize: 'vertical' }} />
+                <textarea className="brute-input" rows={8} placeholder="SPECIFY_SPECIALIZATION_DATA..." value={description} onChange={e => setDescription(e.target.value)} style={{ resize: 'vertical' }} />
               </div>
               <div>
                 <label className="text-label" style={{ marginBottom: 10, display: 'block' }}>OWNER_ADDRESS (EDDSA/ECDSA)</label>
-                <input className="brute-input" placeholder="0x..." defaultValue="0x742D35CC6634C0532925A3B844BC454E4438F44E" />
+                <input className="brute-input" placeholder="0x..." value={ownerAddr} onChange={e => setOwnerAddr(e.target.value)} />
               </div>
             </motion.div>
           )}
@@ -159,13 +195,25 @@ export default function RegisterPage() {
                 <label className="text-label" style={{ marginBottom: 12, display: 'block' }}>SETTLEMENT_LOGIC</label>
                 <div style={{ display: 'flex', gap: 12 }}>
                   {['FIXED', 'AUCTION', 'DYNAMIC'].map(pt => (
-                    <button key={pt} className="brute-badge" style={{ padding: '8px 24px', cursor: 'pointer', background: pt === 'FIXED' ? 'var(--rv-black)' : 'var(--rv-white)', color: pt === 'FIXED' ? 'var(--rv-white)' : 'var(--rv-black)' }}>{pt}</button>
+                    <button 
+                      key={pt} 
+                      className="brute-badge" 
+                      onClick={() => setPricingType(pt)}
+                      style={{ 
+                        padding: '8px 24px', 
+                        cursor: 'pointer', 
+                        background: pt === pricingType ? 'var(--rv-black)' : 'var(--rv-white)', 
+                        color: pt === pricingType ? 'var(--rv-white)' : 'var(--rv-black)' 
+                      }}
+                    >
+                      {pt}
+                    </button>
                   ))}
                 </div>
               </div>
               <div>
                 <label className="text-label" style={{ marginBottom: 10, display: 'block' }}>BASE_VALUATION (USDC)</label>
-                <input className="brute-input" type="number" defaultValue={50} />
+                <input className="brute-input" type="number" value={basePrice} onChange={e => setBasePrice(e.target.value)} />
               </div>
               <div>
                 <label className="text-label" style={{ marginBottom: 12, display: 'block' }}>STABLE_TOKENS_ACCEPTED</label>
@@ -225,13 +273,40 @@ export default function RegisterPage() {
             ) : (
               <button 
                 className="brute-btn brute-btn-teal" 
+                disabled={isWritePending || isConfirming || !isConnected}
                 onClick={() => {
-                    setSubmitted(true);
-                    showToast('Broadcasting VaultWallet deployment...', 'success');
+                   if (!isConnected) {
+                       showToast('Please connect your wallet first.', 'error');
+                       return;
+                   }
+
+                   const capsBytes = capabilities.map(c => pad(stringToHex(c.slice(0, 31)), { size: 32 })) as readonly `0x${string}`[];
+                   const pType = pricingType === 'FIXED' ? 0 : pricingType === 'AUCTION' ? 1 : 2;
+                   
+                   writeContract({
+                       abi: REGISTRY_ABI,
+                       address: CONTRACT_ADDRESSES.REGISTRY,
+                       functionName: 'register',
+                       args: [
+                           capsBytes,
+                           {
+                               basePrice: parseEther(basePrice),
+                               currency: CONTRACT_ADDRESSES.USDC,
+                               pricingType: pType,
+                           },
+                           '0x'
+                       ]
+                   });
+                   
+                   showToast('Broadcasting VaultWallet deployment...', 'info');
                 }}
                 style={{ padding: '0 40px', fontSize: 16 }}
               >
-                <Zap size={18} /> DEPLOY_VAULT_WALLETS
+                {isWritePending || isConfirming ? (
+                    <><Loader2 className="animate-spin" size={18} /> PROCESSING...</>
+                ) : (
+                    <><Zap size={18} /> DEPLOY_VAULT_WALLETS</>
+                )}
               </button>
             )}
           </div>

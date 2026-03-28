@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import { AgentCard } from '@/components/AgentCard';
 import { AGENTS } from '@/lib/mockData';
-import { ArrowRight, Zap, Shield, Globe, BarChart3, Users, Lock, ChevronRight } from 'lucide-react';
+import { ArrowRight, Zap, Shield, Globe, BarChart3, Users, Lock, ChevronRight, MessageCircle, Cpu, Send } from 'lucide-react';
 import { useToast } from '@/components/ToastProvider';
 
 const features = [
@@ -72,29 +72,133 @@ export default function HomePage() {
               </motion.div>
             </div>
 
-            {/* Floating Visual Elements */}
+            {/* Neo-Brutalist HTML/CSS Diagram: RelayVault Workflow */}
             <motion.div 
               className="hidden lg:block relative"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.4 }}
+              style={{ width: 480, height: 500, position: 'relative' }}
             >
-              <div className="brute-card" style={{ background: 'var(--rv-black)', color: 'var(--rv-white)', position: 'relative', zIndex: 10 }}>
-                 <div className="text-label" style={{ color: 'var(--rv-purple-200)', marginBottom: 8 }}>Escrow Lock #4829</div>
-                 <div style={{ fontSize: 24, fontWeight: 800, fontFamily: 'var(--rv-font-mono)' }}>15,000.00 USDC</div>
-                 <div style={{ marginTop: 16, borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 12, display: 'flex', justifyContent: 'space-between' }}>
-                    <span className="text-mono" style={{ fontSize: 10 }}>0x3C...89AB</span>
-                    <span className="badge-success brute-badge" style={{ fontSize: 9 }}>LOCKED</span>
-                 </div>
-              </div>
-              <div className="brute-card" style={{ position: 'absolute', top: 40, right: -40, width: 200, zIndex: 5, boxShadow: '6px 6px 0px var(--rv-purple-600)' }}>
-                 <div className="text-label" style={{ marginBottom: 4 }}>Reputation</div>
-                 <div style={{ fontSize: 20, fontWeight: 800 }}>984<span style={{ fontSize: 12, opacity: 0.4 }}>/1000</span></div>
-              </div>
-              <div className="brute-card" style={{ position: 'absolute', bottom: -60, left: -40, width: 180, zIndex: 5, borderColor: 'var(--rv-teal-600)', boxShadow: '6px 6px 0px var(--rv-teal-600)' }}>
-                 <div className="text-label" style={{ color: 'var(--rv-teal-600)' }}>Last Payout</div>
-                 <div style={{ fontSize: 18, fontWeight: 700 }}>+420 USDC</div>
-              </div>
+              
+              {/* Card 1: Negotiation Engine (Top Left) */}
+              <motion.div 
+                animate={{ y: [0, -8, 0] }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                style={{
+                  position: 'absolute', top: 20, left: 0, width: 280, height: 260,
+                  background: '#3B82F6', border: '3px solid var(--rv-black)', borderRadius: 12,
+                  boxShadow: '6px 6px 0px var(--rv-black)', overflow: 'hidden', zIndex: 10,
+                  display: 'flex', flexDirection: 'column'
+                }}
+              >
+                <div style={{ background: '#FFF', borderBottom: '3px solid var(--rv-black)', padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ fontFamily: 'var(--rv-font-sans)', fontSize: 13, fontWeight: 900, textTransform: 'uppercase' }}>Negotiation Engine</div>
+                  <div style={{ width: 12, height: 12, background: 'var(--rv-black)', borderRadius: '50%' }}></div>
+                </div>
+                
+                <div style={{ padding: 16, flex: 1, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  {/* Task Request */}
+                  <div style={{ background: '#FFF', border: '2px solid var(--rv-black)', padding: '10px 14px', borderRadius: 8, boxShadow: '2px 2px 0px var(--rv-black)' }}>
+                    <div style={{ fontSize: 10, fontWeight: 800, color: 'var(--rv-gray-500)', marginBottom: 2 }}>TASK REQUEST</div>
+                    <div style={{ fontFamily: 'var(--rv-font-mono)', fontSize: 12, fontWeight: 700 }}>Build Yield Aggregator (Solidity)</div>
+                  </div>
+
+                  {/* Bids */}
+                  <div style={{ display: 'flex', gap: 12, marginTop: 'auto' }}>
+                    <div style={{ flex: 1, background: '#FFF', border: '2px solid var(--rv-black)', padding: '10px', borderRadius: 8, textAlign: 'center' }}>
+                      <div style={{ fontSize: 10, fontWeight: 800, color: 'var(--rv-gray-500)' }}>USER BID</div>
+                      <div style={{ fontFamily: 'var(--rv-font-mono)', fontSize: 14, fontWeight: 800 }}>$1,000</div>
+                    </div>
+                    <div style={{ flex: 1, background: 'var(--rv-yellow, #FCD34D)', border: '2px solid var(--rv-black)', padding: '10px', borderRadius: 8, textAlign: 'center', boxShadow: '2px 2px 0px var(--rv-black)' }}>
+                      <div style={{ fontSize: 10, fontWeight: 800 }}>AGENT ASK</div>
+                      <div style={{ fontFamily: 'var(--rv-font-mono)', fontSize: 14, fontWeight: 900 }}>$1,200</div>
+                    </div>
+                  </div>
+
+                  {/* Action Button */}
+                  <div style={{ background: 'var(--rv-black)', color: '#FFF', textAlign: 'center', padding: '10px', borderRadius: 8, fontFamily: 'var(--rv-font-mono)', fontSize: 12, fontWeight: 800, marginTop: 4 }}>
+                    ACCEPT & LOCK FUNDS
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Card 2: Vault Escrow (Bottom Right) */}
+              <motion.div 
+                animate={{ y: [0, 8, 0] }}
+                transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                style={{
+                  position: 'absolute', top: 160, left: 160, width: 280, height: 240,
+                  background: 'var(--rv-teal-400, #34D399)', border: '3px solid var(--rv-black)', borderRadius: 12,
+                  boxShadow: '8px 8px 0px var(--rv-black)', padding: 0, zIndex: 5,
+                  display: 'flex', flexDirection: 'column'
+                }}
+              >
+                <div style={{ background: '#FFF', borderBottom: '3px solid var(--rv-black)', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <Shield size={16} />
+                  <div style={{ fontFamily: 'var(--rv-font-sans)', fontSize: 13, fontWeight: 900 }}>VaultEscrow_0x8F2</div>
+                </div>
+
+                <div style={{ padding: 20, flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                  {/* Status Banner */}
+                  <div style={{ background: '#FFF', border: '2px dashed var(--rv-black)', padding: 12, borderRadius: 8, textAlign: 'center' }}>
+                    <div style={{ fontFamily: 'var(--rv-font-mono)', fontSize: 24, fontWeight: 900, marginBottom: 4 }}>1,200 USDC</div>
+                    <div style={{ fontSize: 11, fontWeight: 800, color: 'var(--rv-teal-600)', letterSpacing: 1 }}>FUNDS TRUSTLESSLY SECURED</div>
+                  </div>
+
+                  {/* Progress Line */}
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, fontWeight: 800, marginBottom: 6 }}>
+                      <span>EXECUTION STATUS</span>
+                      <span style={{ fontFamily: 'var(--rv-font-mono)' }}>68%</span>
+                    </div>
+                    <div style={{ height: 12, background: '#FFF', border: '2px solid var(--rv-black)', borderRadius: 8, overflow: 'hidden' }}>
+                      <div style={{ height: '100%', width: '68%', background: 'var(--rv-black)' }}></div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Floating Badge: Reputation Bond */}
+              <motion.div
+                animate={{ x: [0, 6, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                style={{
+                  position: 'absolute', top: -10, right: 30, background: 'var(--rv-yellow, #FCD34D)', border: '3px solid var(--rv-black)',
+                  padding: '12px 16px', borderRadius: 8, boxShadow: '4px 4px 0px var(--rv-black)', zIndex: 20,
+                  display: 'flex', alignItems: 'center', gap: 12
+                }}
+              >
+                <div style={{ width: 24, height: 24, background: '#FFF', borderRadius: '50%', border: '2px solid var(--rv-black)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Shield size={12}/></div>
+                <div>
+                  <div style={{ fontSize: 9, fontWeight: 800, textTransform: 'uppercase' }}>Agent Stake</div>
+                  <div style={{ fontFamily: 'var(--rv-font-mono)', fontSize: 14, fontWeight: 900 }}>+ 120 USDC BOND</div>
+                </div>
+              </motion.div>
+
+              {/* Floating Badge: Monad Speed */}
+              <motion.div
+                animate={{ y: [0, -5, 0] }}
+                transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
+                style={{
+                  position: 'absolute', bottom: 50, left: -20, background: '#FFF', border: '3px solid var(--rv-black)',
+                  padding: '10px 14px', borderRadius: 8, boxShadow: '4px 4px 0px var(--rv-black)', zIndex: 20,
+                  display: 'flex', alignItems: 'center', gap: 10
+                }}
+              >
+                <div style={{ width: 20, height: 20, borderRadius: '50%', border: '2px solid var(--rv-black)', background: 'var(--rv-purple-600, #9333EA)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Zap size={10} color="#FFF" style={{ fill: '#FFF' }} />
+                </div>
+                <div style={{ fontFamily: 'var(--rv-font-mono)', fontSize: 11, fontWeight: 800 }}>Parallel EVM Tx: 3ms</div>
+              </motion.div>
+
+              {/* Decoration Element */}
+              <div style={{
+                position: 'absolute', top: 120, left: 140, width: 40, height: 40, 
+                borderTop: '3px dashed var(--rv-black)', borderLeft: '3px dashed var(--rv-black)', 
+                zIndex: 1, borderRadius: '12px 0 0 0'
+              }}></div>
+
             </motion.div>
           </div>
         </div>
@@ -179,6 +283,80 @@ export default function HomePage() {
         </div>
 
       </main>
+
+      <footer style={{ borderTop: '1.5px solid var(--rv-black)', background: 'var(--rv-pure-white)', padding: '80px 40px 40px' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: 60, marginBottom: 80 }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24 }}>
+                <div style={{ width: 32, height: 32, background: 'var(--rv-black)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Zap size={18} color="white" fill="white" />
+                </div>
+                <span style={{ fontSize: 24, fontWeight: 900, letterSpacing: '-0.02em', fontFamily: 'var(--rv-font-sans)' }}>RELAYVAULT</span>
+              </div>
+              <p style={{ color: 'var(--rv-gray-600)', fontSize: 14, lineHeight: 1.6, maxWidth: 300, marginBottom: 32 }}>
+                Financial infrastructure for the agentic economy. 
+                Securing trustless value exchange between machines on the Monad Parallel EVM.
+              </p>
+              <div style={{ display: 'flex', gap: 16 }}>
+                {[MessageCircle, Cpu, Send].map((Icon, i) => (
+                  <button 
+                    key={i} 
+                    className="brute-card-interactive" 
+                    style={{ 
+                      width: 40, height: 40, borderRadius: 8, padding: 0, 
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      background: 'var(--rv-white)', border: '1.5px solid var(--rv-black)',
+                      boxShadow: '2px 2px 0px var(--rv-black)'
+                    }}
+                  >
+                    <Icon size={18} />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h4 className="text-label" style={{ marginBottom: 24, color: 'var(--rv-black)' }}>PROTOCOL</h4>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <li><Link href="/discover" style={{ fontSize: 14, color: 'var(--rv-gray-600)', textDecoration: 'none' }}>Marketplace</Link></li>
+                <li><Link href="/register" style={{ fontSize: 14, color: 'var(--rv-gray-600)', textDecoration: 'none' }}>Agent Registry</Link></li>
+                <li><Link href="/dashboard" style={{ fontSize: 14, color: 'var(--rv-gray-600)', textDecoration: 'none' }}>Management</Link></li>
+                <li><Link href="/history" style={{ fontSize: 14, color: 'var(--rv-gray-600)', textDecoration: 'none' }}>Audit Trail</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-label" style={{ marginBottom: 24, color: 'var(--rv-black)' }}>RESOURCES</h4>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <li><a href="#" style={{ fontSize: 14, color: 'var(--rv-gray-600)', textDecoration: 'none' }}>Documentation</a></li>
+                <li><a href="#" style={{ fontSize: 14, color: 'var(--rv-gray-600)', textDecoration: 'none' }}>API Reference</a></li>
+                <li><a href="#" style={{ fontSize: 14, color: 'var(--rv-gray-600)', textDecoration: 'none' }}>Monad Explorer</a></li>
+                <li><a href="#" style={{ fontSize: 14, color: 'var(--rv-gray-600)', textDecoration: 'none' }}>Security Audit</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-label" style={{ marginBottom: 24, color: 'var(--rv-black)' }}>GOVERNANCE</h4>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <li><a href="#" style={{ fontSize: 14, color: 'var(--rv-gray-600)', textDecoration: 'none' }}>Snapshot</a></li>
+                <li><a href="#" style={{ fontSize: 14, color: 'var(--rv-gray-600)', textDecoration: 'none' }}>DAO Forum</a></li>
+                <li><a href="#" style={{ fontSize: 14, color: 'var(--rv-gray-600)', textDecoration: 'none' }}>Grants</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div style={{ borderTop: '1px solid var(--rv-gray-100)', paddingTop: 40, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ fontSize: 12, color: 'var(--rv-gray-400)', fontFamily: 'var(--rv-font-mono)' }}>
+              © 2026 RELAYVAULT_PROTOCOL · SCALE_PARALLEL_TRUST
+            </div>
+            <div style={{ display: 'flex', gap: 32 }}>
+              <a href="#" style={{ fontSize: 12, color: 'var(--rv-gray-400)', textDecoration: 'none' }}>TERMS_OF_USE</a>
+              <a href="#" style={{ fontSize: 12, color: 'var(--rv-gray-400)', textDecoration: 'none' }}>PRIVACY_POLICY</a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

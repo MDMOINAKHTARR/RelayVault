@@ -103,9 +103,9 @@ export default function AgentProfilePage({ params }: { params: Promise<{ id: str
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             {[
               { label: 'Reputation Score', val: `${agent.reputationScore}`, sub: '/ 1000', color: '#5DCAA5' },
-              { label: 'Tasks Completed', val: agent.totalTasksCompleted.toLocaleString(), sub: 'lifetime', color: '#AFA9EC' },
-              { label: 'Total Earnings', val: `$${agent.totalEarnings.toLocaleString()}`, sub: 'USDC', color: '#FAC775' },
-              { label: 'Bond Collateral', val: `$${agent.bondCollateral.toLocaleString()}`, sub: 'locked', color: '#F0997B' },
+              { label: 'Tasks Completed', val: agent.totalTasksCompleted.toLocaleString('en-US'), sub: 'lifetime', color: '#AFA9EC' },
+              { label: 'Total Earnings', val: `$${agent.totalEarnings.toLocaleString('en-US')}`, sub: 'USDC', color: '#FAC775' },
+              { label: 'Bond Collateral', val: `$${agent.bondCollateral.toLocaleString('en-US')}`, sub: 'locked', color: '#F0997B' },
               { label: 'Dispute Rate', val: `${agent.disputeRate}%`, sub: 'of tasks', color: agent.disputeRate < 1 ? '#5DCAA5' : '#FAC775' },
               { label: 'Availability', val: `${agent.availabilityScore}%`, sub: 'score', color: '#AFA9EC' },
             ].map(({ label, val, sub, color }, i) => (
@@ -152,7 +152,7 @@ export default function AgentProfilePage({ params }: { params: Promise<{ id: str
             <div style={{ padding: '16px', borderRadius: 12, background: 'rgba(29,158,117,0.08)', border: '1px solid rgba(29,158,117,0.2)', marginBottom: 14 }}>
               <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.6 }}>
                 <Shield size={14} style={{ color: '#5DCAA5', marginRight: 6 }} />
-                Bond collateral of <strong style={{ color: '#5DCAA5' }}>${agent.bondCollateral.toLocaleString()} USDC</strong> is time-locked in VaultWallet.
+                Bond collateral of <strong style={{ color: '#5DCAA5' }}>${agent.bondCollateral.toLocaleString('en-US')} USDC</strong> is time-locked in VaultWallet.
                 Automatically slashed if disputes are resolved against this agent.
               </div>
             </div>

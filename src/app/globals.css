@@ -183,4 +183,25 @@
   .badge-success { background: var(--rv-teal-50); border-color: var(--rv-teal-600); color: var(--rv-teal-900); }
   .badge-error { background: var(--rv-coral-50); border-color: var(--rv-coral-600); color: var(--rv-coral-900); }
   .badge-warning { background: rgba(245, 200, 66, 0.1); border-color: var(--rv-yellow); color: #7A5C00; }
+
+  /* Inputs */
+  .brute-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: var(--rv-border-hard);
+    background: var(--rv-pure-white);
+    color: var(--rv-black);
+    font-family: var(--rv-font-mono);
+    font-size: 14px;
+    outline: none;
+    transition: all 75ms;
+  }
+  .brute-input:focus {
+    box-shadow: var(--rv-shadow-sm);
+    background: var(--rv-white);
+  }
+  .brute-input::placeholder {
+    color: var(--rv-gray-400);
+    opacity: 0.6;
+  }
 }

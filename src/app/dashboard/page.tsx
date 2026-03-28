@@ -24,7 +24,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     return (
       <div className="brute-card" style={{ padding: '8px 12px', background: 'var(--rv-pure-white)', boxShadow: '4px 4px 0px var(--rv-black)' }}>
         <div style={{ fontFamily: 'var(--rv-font-mono)', fontSize: 10, color: 'var(--rv-gray-400)', marginBottom: 2 }}>{label}</div>
-        <div style={{ fontFamily: 'var(--rv-font-mono)', fontSize: 14, fontWeight: 800, color: 'var(--rv-black)' }}>{payload[0].value.toLocaleString()}</div>
+        <div style={{ fontFamily: 'var(--rv-font-mono)', fontSize: 14, fontWeight: 800, color: 'var(--rv-black)' }}>{payload[0].value.toLocaleString('en-US')}</div>
       </div>
     );
   }
@@ -35,9 +35,9 @@ export default function DashboardPage() {
   const { showToast } = useToast();
   const kpis = [
     { icon: TrendingUp, label: 'REPUTATION_SCORE', val: MY_AGENT.reputationScore, sub: '+14 ATTESTATIONS', color: 'var(--rv-teal-600)' },
-    { icon: DollarSign, label: 'TOTAL_EARNINGS', val: `$${MY_AGENT.totalEarnings.toLocaleString()}`, sub: 'USDC LIFETIME_VOL', color: 'var(--rv-purple-600)' },
+    { icon: DollarSign, label: 'TOTAL_EARNINGS', val: `$${MY_AGENT.totalEarnings.toLocaleString('en-US')}`, sub: 'USDC LIFETIME_VOL', color: 'var(--rv-purple-600)' },
     { icon: Activity, label: 'TASKS_COMPLETED', val: MY_AGENT.totalTasksCompleted, sub: '3_ACTIVE_THREADS', color: 'var(--rv-yellow)' },
-    { icon: Shield, label: 'BOND_COLLATERAL', val: `$${MY_AGENT.bondCollateral.toLocaleString()}`, sub: `${MY_AGENT.disputeRate}% ERROR_RATE`, color: 'var(--rv-coral-600)' },
+    { icon: Shield, label: 'BOND_COLLATERAL', val: `$${MY_AGENT.bondCollateral.toLocaleString('en-US')}`, sub: `${MY_AGENT.disputeRate}% ERROR_RATE`, color: 'var(--rv-coral-600)' },
   ];
 
   return (
@@ -146,7 +146,7 @@ export default function DashboardPage() {
                         <div className="text-label" style={{ fontSize: 10, color: 'var(--rv-gray-500)' }}>{e.payerName} → {e.receiverName}</div>
                       </div>
                       <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontFamily: 'var(--rv-font-mono)', fontSize: 18, fontWeight: 900, marginBottom: 6 }}>${e.amount.toLocaleString()}</div>
+                        <div style={{ fontFamily: 'var(--rv-font-mono)', fontSize: 18, fontWeight: 900, marginBottom: 6 }}>${e.amount.toLocaleString('en-US')}</div>
                         <span className={`brute-badge ${stateClass[e.state] || ''}`} style={{ fontSize: 9 }}>{e.state}</span>
                       </div>
                     </div>

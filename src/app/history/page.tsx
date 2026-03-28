@@ -118,10 +118,10 @@ export default function HistoryPage() {
                       </div>
                     </td>
                     <td style={{ padding: '18px 24px', fontFamily: 'var(--rv-font-mono)', fontSize: 15, fontWeight: 800 }}>
-                      {tx.amount ? `$${tx.amount.toLocaleString()}` : '—'}
+                      {tx.amount ? `$${tx.amount.toLocaleString('en-US')}` : '—'}
                     </td>
                     <td style={{ padding: '18px 24px', fontFamily: 'var(--rv-font-mono)', fontSize: 12, color: 'var(--rv-gray-400)' }}>
-                      #{tx.blockNumber.toLocaleString()}
+                      #{tx.blockNumber.toLocaleString('en-US')}
                     </td>
                     <td style={{ padding: '18px 24px' }}>
                       {tx.ipfsCID ? (
