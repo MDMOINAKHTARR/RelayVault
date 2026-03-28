@@ -1,7 +1,7 @@
 'use client';
 import { createAppKit } from '@reown/appkit/react';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
-import { monadTestnet, hardhat } from '@wagmi/core/chains';
+import { monadTestnet } from '@wagmi/core/chains';
 import { WagmiProvider } from 'wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
@@ -11,7 +11,7 @@ import React from 'react';
 const projectId = process.env.NEXT_PUBLIC_PROJECT_ID || 'b246a470126781cd095113d7e86e1e82';
 
 // 2. Set up the Wagmi adapter
-export const networks = [hardhat, monadTestnet];
+export const networks = [monadTestnet];
 const wagmiAdapter = new WagmiAdapter({
   projectId,
   networks,
@@ -20,7 +20,7 @@ const wagmiAdapter = new WagmiAdapter({
 // 3. Create the AppKit instance
 createAppKit({
   adapters: [wagmiAdapter],
-  networks: [hardhat, monadTestnet],
+  networks: [monadTestnet],
   projectId,
   features: {
     analytics: false, // Disable to avoid 403 when using placeholder projectId

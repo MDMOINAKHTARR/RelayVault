@@ -11,6 +11,7 @@ contract AgentRegistry is IAgentRegistry {
     uint256 public agentCount;
     mapping(address => AgentInfo) public agents;
     mapping(address => address) public agentVaults;
+    address[] public agentAddresses; // track all agent addresses for enumeration
     
     // Reverse mapping from vault to agent
     mapping(address => address) public vaultToAgent;
@@ -72,6 +73,7 @@ contract AgentRegistry is IAgentRegistry {
         agents[msg.sender] = newAgent;
         agentVaults[msg.sender] = address(newVault);
         vaultToAgent[address(newVault)] = msg.sender;
+        agentAddresses.push(msg.sender);
         agentCount++;
 
         emit AgentRegistered(msg.sender, address(newVault), capabilities, block.timestamp);
@@ -109,6 +111,14 @@ contract AgentRegistry is IAgentRegistry {
 
     function getVaultAddress(address agentId) external view override returns (address) {
         return agentVaults[agentId];
+    }
+
+    function getAllAgents() external view returns (AgentInfo[] memory) {
+        AgentInfo[] memory result = new AgentInfo[](agentAddresses.length);
+        for (uint256 i = 0; i < agentAddresses.length; i++) {
+            result[i] = agents[agentAddresses[i]];
+        }
+        return result;
     }
 
     function suspend(address agentId, string calldata reason) external override onlyOwner {
